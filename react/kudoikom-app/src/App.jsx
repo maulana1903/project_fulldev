@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Camera, LogOut, User, Phone, MapPin, Calendar, CheckCircle, XCircle, Eye } from 'lucide-react';
+import api from './api';
 
 const App = () => {
   const [page, setPage] = useState('booking');
@@ -34,31 +35,23 @@ const App = () => {
     setBookings(savedBookings);
   }, []);
 
-  const handleLogin = () => {
-    // TODO: Ganti dengan API call ke Laravel
-    // fetch('/api/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(loginData)
-    // })
-    // .then(res => res.json())
-    // .then(data => {
-    //   if (data.success) {
-    //     setUserRole(data.role);
-    //     setPage(data.role === 'superuser' ? 'itservice' : 'admin');
-    //   }
-    // });
+  const handleLogin = async () => {
+  try {
+    // 1️⃣ ambil CSRF cookie
+    await api.get('/sanctum/csrf-cookie');
 
-    if (loginData.username === 'superuser' && loginData.password === 'super123') {
-      setUserRole('superuser');
-      setPage('itservice');
-    } else if (loginData.username === 'admin' && loginData.password === 'admin123') {
-      setUserRole('admin');
-      setPage('admin');
-    } else {
-      alert('Username atau password salah!');
-    }
-  };
+    // 2️⃣ login
+    const res = await api.post('/api/login', loginData);
+
+    alert('Login berhasil');
+    console.log(res.data);
+  } catch (err) {
+    console.error(err.response?.data);
+    alert(err.response?.data?.message || 'CSRF error');
+  }
+};
+
+
 
   const handleRegisterAdmin = () => {
     if (registerData.password !== registerData.confirmPassword) {
