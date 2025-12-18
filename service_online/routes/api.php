@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\ServiceRequestApiController;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-
+//midleware admin untuk update
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/admins', [AdminApiController::class, 'index']);
     Route::post('/admins', [AdminApiController::class, 'store']);
