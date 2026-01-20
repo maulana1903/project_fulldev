@@ -14,7 +14,7 @@ export default function AdminCreate() {
     email: '',
     password: '',
     jabatan: '',
-    role_id: '2',
+    role_id: '2', // default ADMIN
   });
 
   const submit = async (e) => {
