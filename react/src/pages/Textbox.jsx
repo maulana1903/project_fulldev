@@ -1,101 +1,90 @@
-import { useEffect, useState } from "react";
-import api from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import api from '../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminDashboard() {
   const [data, setData] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const [sortConfig, setSortConfig] = useState({
-  key: null,
-  direction: "asc",
+    key: null,
+    direction: 'asc',
   });
 
   const loadData = async () => {
     try {
-      const res = await api.get("/service-requests");
+      const res = await api.get('/service-requests');
       setData(res.data);
     } catch (err) {
       if (err.response?.status === 401) {
-        navigate("/login-admin");
+        navigate('/login-admin');
       }
     }
   };
 
   const updateStatus = async (row, status) => {
-    const confirm = window.confirm(
-      `Yakin ${status === "disetujui" ? "ACC" : "Tolak"} service ini?`
-    );
+    const confirm = window.confirm(`Yakin ${status === 'disetujui' ? 'ACC' : 'Tolak'} service ini?`);
     if (!confirm) return;
 
-        try {
+    try {
       await api.put(`/service-requests/${row.id}/status`, { status });
 
       // pesan WA
       const pesan = encodeURIComponent(
-  `Halo kak ${row.nama_pemilik}
+        `Halo kak ${row.nama_pemilik}
 
-Service Anda *${status === "disetujui" ? "DISETUJUI" : "DITOLAK"}* pada
+Service Anda *${status === 'disetujui' ? 'DISETUJUI' : 'DITOLAK'}* pada
 Tanggal: ${row.tanggal_service}
 Jam: ${row.jam_service}
 
 Teknisi akan berusaha datang tepat waktu dimohon untuk bersedia menunggu
 Harap hubungi admin untuk informasi selengkapnya
-Terima kasih`
+Terima kasih`,
       );
 
-      window.open(
-        `https://wa.me/${row.no_telp}?text=${pesan}`,
-        "_blank"
-      );
+      window.open(`https://wa.me/${row.no_telp}?text=${pesan}`, '_blank');
 
       loadData();
     } catch {
-      alert("Gagal update status");
+      alert('Gagal update status');
     }
   };
 
   const logout = () => {
     localStorage.clear();
     sessionStorage.clear();
-    navigate("/login-admin");
+    navigate('/login-admin');
   };
 
   useEffect(() => {
     loadData();
   }, []);
-  const filteredData = data.filter((row) =>
-  row.nama_pemilik.toLowerCase().includes(search.toLowerCase()) ||
-  row.no_telp.includes(search) ||
-  row.status.includes(search)
-  );
+  const filteredData = data.filter((row) => row.nama_pemilik.toLowerCase().includes(search.toLowerCase()) || row.no_telp.includes(search) || row.status.includes(search));
 
   const sortedData = [...filteredData].sort((a, b) => {
-  if (!sortConfig.key) return 0;
+    if (!sortConfig.key) return 0;
 
-  let aVal = a[sortConfig.key];
-  let bVal = b[sortConfig.key];
+    let aVal = a[sortConfig.key];
+    let bVal = b[sortConfig.key];
 
-  // khusus tanggal
-  if (sortConfig.key === "tanggal_service") {
-    aVal = new Date(aVal);
-    bVal = new Date(bVal);
-  }
+    if (sortConfig.key === 'tanggal_service') {
+      aVal = new Date(aVal);
+      bVal = new Date(bVal);
+    }
 
-  if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
-  if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
-  return 0;
+    if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
   });
   const handleSort = (key) => {
-  let direction = "asc";
+    let direction = 'asc';
 
-  if (sortConfig.key === key && sortConfig.direction === "asc") {
-    direction = "desc";
-  }
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
 
-  setSortConfig({ key, direction });
+    setSortConfig({ key, direction });
   };
-
 
   return (
     <div className="app-wrapper">
@@ -103,10 +92,7 @@ Terima kasih`
         <div className="container-fluid">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item dropdown user-menu">
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={logout}
-              >
+              <button className="btn btn-danger btn-sm" onClick={logout}>
                 Logout
               </button>
             </li>
@@ -118,12 +104,9 @@ Terima kasih`
       <aside className="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
         <div className="sidebar-brand">
           <a href="#" className="brand-link">
-          <img
-              src="/dist/assets/img/KudoikomLogo.png"
-              alt="Kudoikom Logo"
-              class="brand-image opacity-75 shadow"
-            />
-          <span className="brand-text fw-light ms-3">KUDOIKOM</span></a>
+            <img src="/dist/assets/img/KudoikomLogo.png" alt="Kudoikom Logo" class="brand-image opacity-75 shadow" />
+            <span className="brand-text fw-light ms-3">KUDOIKOM</span>
+          </a>
         </div>
 
         <div className="sidebar-wrapper">
@@ -146,13 +129,7 @@ Terima kasih`
           <div className="container-fluid">
             <h3 className="mb-3">Tabel Permintaan Service</h3>
             <div className="mb-3 col-md-4">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Cari nama / no WA..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+              <input type="text" className="form-control" placeholder="Cari nama / no WA..." value={search} onChange={(e) => setSearch(e.target.value)} />
             </div>
           </div>
         </div>
@@ -166,36 +143,24 @@ Terima kasih`
                     <tr>
                       <th>ID</th>
 
-                      <th
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleSort("nama_pemilik")}
-                      >
-                        Nama {sortConfig.key === "nama_pemilik" && (sortConfig.direction === "asc" ? "⬆" : "⬇")}
+                      <th style={{ cursor: 'pointer' }} onClick={() => handleSort('nama_pemilik')}>
+                        Nama {sortConfig.key === 'nama_pemilik' && (sortConfig.direction === 'asc' ? '⬆' : '⬇')}
                       </th>
 
-                      <th
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleSort("tanggal_service")}
-                      >
-                        Tanggal {sortConfig.key === "tanggal_service" && (sortConfig.direction === "asc" ? "⬆" : "⬇")}
+                      <th style={{ cursor: 'pointer' }} onClick={() => handleSort('tanggal_service')}>
+                        Tanggal {sortConfig.key === 'tanggal_service' && (sortConfig.direction === 'asc' ? '⬆' : '⬇')}
                       </th>
 
-                      <th
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleSort("jam_service")}
-                      >
-                        Jam {sortConfig.key === "jam_service" && (sortConfig.direction === "asc" ? "⬆" : "⬇")}
+                      <th style={{ cursor: 'pointer' }} onClick={() => handleSort('jam_service')}>
+                        Jam {sortConfig.key === 'jam_service' && (sortConfig.direction === 'asc' ? '⬆' : '⬇')}
                       </th>
 
                       <th>Maps</th>
                       <th>Kerusakan</th>
                       <th>Bukti</th>
 
-                      <th
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleSort("status")}
-                      >
-                        Status {sortConfig.key === "status" && (sortConfig.direction === "asc" ? "⬆" : "⬇")}
+                      <th style={{ cursor: 'pointer' }} onClick={() => handleSort('status')}>
+                        Status {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? '⬆' : '⬇')}
                       </th>
 
                       <th>Aksi</th>
@@ -218,75 +183,37 @@ Terima kasih`
                         <td>{row.jam_service}</td>
 
                         <td>
-                          <a
-                            href={row.link_gmaps}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <span className="badge text-bg-info">
-                              Link
-                            </span>
+                          <a href={row.link_gmaps} target="_blank" rel="noreferrer">
+                            <span className="badge text-bg-info">Link</span>
                           </a>
                         </td>
 
-                        <td style={{ maxWidth: 300, whiteSpace: "normal" }}>
-                          {row.keterangan}
-                        </td>
+                        <td style={{ maxWidth: 300, whiteSpace: 'normal' }}>{row.keterangan}</td>
 
                         <td>
-                          <a
-                            href={`http://localhost:8000/storage/${row.bukti_transfer}`}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <span className="badge text-bg-success">
-                              Bukti TF
-                            </span>
+                          <a href={`http://localhost:8000/storage/${row.bukti_transfer}`} target="_blank" rel="noreferrer">
+                            <span className="badge text-bg-success">Bukti TF</span>
                           </a>
                         </td>
 
                         <td>
-                          {row.status === "menunggu" && (
-                            <span className="badge bg-warning">
-                              Menunggu
-                            </span>
-                          )}
-                          {row.status === "disetujui" && (
-                            <span className="badge bg-success">
-                              ACC
-                            </span>
-                          )}
-                          {row.status === "ditolak" && (
-                            <span className="badge bg-danger">
-                              Ditolak
-                            </span>
-                          )}
+                          {row.status === 'menunggu' && <span className="badge bg-warning">Menunggu</span>}
+                          {row.status === 'disetujui' && <span className="badge bg-success">ACC</span>}
+                          {row.status === 'ditolak' && <span className="badge bg-danger">Ditolak</span>}
                         </td>
 
                         <td>
-                          {row.status === "menunggu" ? (
+                          {row.status === 'menunggu' ? (
                             <>
-                              <button
-                                className="btn btn-sm btn-primary me-1"
-                                onClick={() =>
-                                  updateStatus(row, "disetujui")
-                                }
-                              >
+                              <button className="btn btn-sm btn-primary me-1" onClick={() => updateStatus(row, 'disetujui')}>
                                 ACC
                               </button>
-                              <button
-                                className="btn btn-sm btn-danger"
-                                onClick={() =>
-                                  updateStatus(row, "ditolak")
-                                }
-                              >
+                              <button className="btn btn-sm btn-danger" onClick={() => updateStatus(row, 'ditolak')}>
                                 Tolak
                               </button>
                             </>
                           ) : (
-                            <span className="text-muted fst-italic">
-                              Selesai
-                            </span>
+                            <span className="text-muted fst-italic">Selesai</span>
                           )}
                         </td>
                       </tr>
