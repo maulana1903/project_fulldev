@@ -1,15 +1,14 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 // pages
-import FormService from "./pages/FormService";
-import LoginAdmin from "./pages/LoginAdmin";
-import AdminDashboard from "./pages/AdminDashboard";
-import SuperAdminDashboard from "./pages/SuperAdminDashboard";
-import AdminCreate from "./pages/AdminCreate";
-import AdminEdit from "./pages/AdminEdit";
-
+import FormService from './pages/FormService';
+import LoginAdmin from './pages/LoginAdmin';
+import AdminDashboard from './pages/AdminDashboard';
+import SuperAdminDashboard from './pages/SuperAdminDashboard';
+import AdminCreate from './pages/AdminCreate';
+import AdminEdit from './pages/AdminEdit';
 
 // auth
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -39,6 +38,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="admin/register"
           element={
@@ -58,7 +58,6 @@ function App() {
 
         {/* FALLBACK */}
         <Route path="*" element={<h2>404 - Halaman Tidak Ditemukan</h2>} />
-
       </Routes>
     </BrowserRouter>
   );
