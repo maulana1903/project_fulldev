@@ -1,6 +1,6 @@
-import { useState } from "react";
-import MapPicker from "../components/MapPicker";
-import PublicLayout from "../layouts/PublicLayout";
+import { useState } from 'react';
+import MapPicker from '../components/MapPicker';
+import PublicLayout from '../layouts/PublicLayout';
 
 export default function PublicMap() {
   const [data, setData] = useState({});
@@ -9,7 +9,6 @@ export default function PublicMap() {
     <PublicLayout>
       <div className="row justify-content-center">
         <div className="col-md-8">
-          
           {/* CARD ADMINLTE */}
           <div className="card card-primary card-outline">
             <div className="card-header">
@@ -29,19 +28,13 @@ export default function PublicMap() {
                   <div className="alert alert-info">
                     <strong>Latitude:</strong> {data.lat} <br />
                     <strong>Longitude:</strong> {data.lng} <br />
-                    <a
-                      href={data.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn btn-sm btn-primary mt-2"
-                    >
+                    <a href={data.link} target="_blank" rel="noreferrer" className="btn btn-sm btn-primary mt-2">
                       Buka di Google Maps
                     </a>
                   </div>
                 </div>
               )}
             </div>
-
           </div>
         </div>
       </div>
