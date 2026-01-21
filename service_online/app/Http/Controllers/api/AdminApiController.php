@@ -10,11 +10,11 @@ use Illuminate\Validation\Rule;
 
 class AdminApiController extends Controller
 {
-   protected function ensureSuperuser(Request $request)
+    protected function ensureSuperuser(Request $request)
     {
         $user = $request->user();
         if (!$user || $user->role_id != 1) {
-            abort(response()->json(['message'=>'Forbidden - superuser only'], 403));
+            abort(response()->json(['message' => 'Forbidden - superuser only'], 403));
         }
     }
 
@@ -43,7 +43,7 @@ class AdminApiController extends Controller
             'role_id' => 2,
         ]);
 
-        return response()->json(['message'=>'Admin created', 'data'=>$admin], 201);
+        return response()->json(['message' => 'Admin created', 'data' => $admin], 201);
     }
 
     public function update(Request $request, $id)
@@ -54,7 +54,7 @@ class AdminApiController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required','email', Rule::unique('users','email')->ignore($admin->id)],
+            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($admin->id)],
             'password' => 'nullable|string|min:8',
         ]);
 
@@ -66,7 +66,7 @@ class AdminApiController extends Controller
         $admin->role_id = 2;
         $admin->save();
 
-        return response()->json(['message'=>'Admin updated','data'=>$admin]);
+        return response()->json(['message' => 'Admin updated', 'data' => $admin]);
     }
 
     public function destroy(Request $request, $id)
@@ -77,13 +77,13 @@ class AdminApiController extends Controller
 
         // jangan biarkan superuser menghapus dirinya sendiri (atau hapus superuser)
         if ($admin->role_id == 1) {
-            return response()->json(['message'=>'Cannot delete superuser'], 403);
+            return response()->json(['message' => 'Cannot delete superuser'], 403);
         }
         if ($request->user()->id == $admin->id) {
-            return response()->json(['message'=>'Cannot delete yourself'], 403);
+            return response()->json(['message' => 'Cannot delete yourself'], 403);
         }
 
         $admin->delete();
-        return response()->json(['message'=>'Admin deleted']);
+        return response()->json(['message' => 'Admin deleted']);
     }
 }
