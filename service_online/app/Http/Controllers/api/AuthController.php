@@ -24,10 +24,17 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login berhasil',
-            'token'   => $token,
-            'user'    => $user,
-        ]);
+        'message' => 'Login berhasil',
+        'token' => $token,
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'jabatan' => $user->jabatan,
+            'role_id' => $user->role_id,
+            'is_root' => $user->is_root,
+        ]
+]);
     }
 
     public function logout(Request $request)

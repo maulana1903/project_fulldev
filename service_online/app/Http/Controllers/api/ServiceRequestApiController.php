@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Api;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ServiceRequest;
@@ -63,8 +61,8 @@ class ServiceRequestApiController extends Controller
         'bukti_transfer'   => 'required|image|mimes:jpg,jpeg,png|max:2048', // wajib upload gambar bukti
     ]);
 
-    $officeLat = -7.123456;
-    $officeLon = 110.123456;
+    $officeLat = -7.719126;
+    $officeLon = 110.746628;
 
     $distance = DistanceHelper::calculateDistance(
         $officeLat,
